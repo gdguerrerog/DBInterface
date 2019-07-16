@@ -95,6 +95,8 @@ public class CreateDialog extends javax.swing.JDialog {
             att_panel.add(new PanelAttribute(newLabel));
         }
        
+        setSize(500, 180 + 40 * newLabels.length);
+        setLocationRelativeTo(null);
         revalidate();
         repaint();
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -111,8 +113,6 @@ public class CreateDialog extends javax.swing.JDialog {
 
             label = new javax.swing.JLabel(labelText);
             textField = new javax.swing.JTextField();
-
-            label.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
             javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
             this.setLayout(layout);
