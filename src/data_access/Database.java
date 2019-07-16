@@ -75,9 +75,41 @@ public class Database {
         {"Fecha", "Ced_docente", "Id_alumno", "Materiales", "Tema", "Horario", "Lugar", "Sec_cedula"}
         
     };
+    public static Procedimiento[] procedure = new Procedimiento[]{
+        new Procedimiento("PAs_1", new String[]{"Porcentaje Aumento","Nivel de Estudio"}),
+        new Procedimiento("PAs_2", new String[]{"Porcentaje Aumento","Nombre Personal"}),
+        new Procedimiento("PAs_3", new String[]{"Cedula Contador"}),
+        new Procedimiento("PAs_4", new String[]{"Porcentaje Aumento","Cedula Contador"}),
+        new Procedimiento("PAs_5", new String[]{"NIT","Porcentaje Tarifa"}),
+        new Procedimiento("PAs_6", new String[]{"Cedula del Docente","Campo de Trabajo","Nivel Educativo"}),
+        new Procedimiento("PAs_7", new String[]{"Cedula de la Persona"}),
+        new Procedimiento("PAs_8", new String[]{"Sueldo"}),
+        new Procedimiento("PAs_9", new String[]{"Número"}),
+        new Procedimiento("PAs_10", new String[]{"Tema Clase"})
+    };
     
+   
+    
+    public static class Procedimiento{
+        public final String nombre;
+        public final String[] parametros;
+        public Procedimiento(String nom, String[] param ){
+            nombre = nom;
+            parametros = param;
+        }
+    }
+    
+    
+   
     public Database (){}
+   
     
+    public static Procedimiento getProcByName(String name){
+        for (int i = 0; i < procedure.length ; i++) {
+            if (procedure[i].nombre.compareTo(name)==0) return procedure[i];
+        }
+        return null;
+    }
     public static int getTableIndexByName(String name){
         for (int i = 0; i < tables.length; i++) {
             if(tables[i].compareTo(name) == 0) return i;

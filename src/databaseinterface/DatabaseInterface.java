@@ -30,27 +30,44 @@ public class DatabaseInterface {
     public static String[] CONTADOR_VISTAS = {Database.vistas[6],Database.vistas[7],Database.vistas[8],Database.vistas[9]};
     public static String[] ADMINISTRADOR_VISTAS = {Database.vistas[3],Database.vistas[4],Database.vistas[5]};
     public static String[] DOCENTE_VISTAS = {Database.vistas[10],Database.vistas[11],Database.vistas[12]};
+      
+    public static String[] PROVIDER_PROC = {Database.procedure[4].nombre};
+    public static String[] PUBLICISTA_PROC = {Database.procedure[4].nombre};
+    public static String[] SECRETARIO_PROC = {Database.procedure[0].nombre,Database.procedure[1].nombre,Database.procedure[2].nombre,Database.procedure[3].nombre,Database.procedure[5].nombre,Database.procedure[6].nombre,Database.procedure[7].nombre,Database.procedure[8].nombre,Database.procedure[9].nombre};
+    public static String[] ADMINISTRADOR_PROC = {Database.procedure[0].nombre,Database.procedure[1].nombre,Database.procedure[2].nombre,Database.procedure[3].nombre,Database.procedure[5].nombre,Database.procedure[6].nombre,Database.procedure[7].nombre,Database.procedure[8].nombre,Database.procedure[9].nombre};
+    public static String[] ADMINDB_PROC = {Database.procedure[0].nombre,Database.procedure[1].nombre,Database.procedure[2].nombre,Database.procedure[3].nombre,Database.procedure[4].nombre,Database.procedure[5].nombre,Database.procedure[6].nombre,Database.procedure[7].nombre,Database.procedure[8].nombre,Database.procedure[9].nombre};
+
+
     
 
     public static enum UserType{
         
-        ADMIN(Database.tables, Database.vistas), 
-        ALUMNO(EMPTY, ALUMNO_VISTAS),
-        PROVIDER(EMPTY, PROVIDER_VISTAS),
-        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS),
-        PUBLICISTA(EMPTY, PUBLICISTA_VISTAS),
-        SECRETARIO(EMPTY, SECRETARIO_VISTAS),
-        CONTADOR(EMPTY, CONTADOR_VISTAS),
-        ADMINISTRADOR(EMPTY, ADMINISTRADOR_VISTAS),
-        DOCENTE(EMPTY, DOCENTE_VISTAS);
+        ADMIN(Database.tables, Database.vistas, ADMINDB_PROC, true), 
+        ALUMNO(EMPTY, ALUMNO_VISTAS, EMPTY),
+        PROVIDER(EMPTY, PROVIDER_VISTAS, PROVIDER_PROC),
+        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS,EMPTY),
+        PUBLICISTA(EMPTY, PUBLICISTA_VISTAS,PUBLICISTA_PROC),
+        SECRETARIO(EMPTY, SECRETARIO_VISTAS,SECRETARIO_PROC),
+        CONTADOR(EMPTY, CONTADOR_VISTAS,EMPTY),
+        ADMINISTRADOR(EMPTY, ADMINISTRADOR_VISTAS,ADMINISTRADOR_PROC),
+        DOCENTE(EMPTY, DOCENTE_VISTAS, EMPTY);
         
         public final String[] selectTables;
         public final String[] selectVistas;
+        public final String[] proc;
+        public final boolean isAdmin;
         
-        UserType(String[] selectTables, String[] vistas){
+        UserType(String[] selectTables, String[] vistas, String[] proc, boolean isAdmin){
             this.selectTables = selectTables;
             this.selectVistas = vistas;
+            this.proc = proc;
+            this.isAdmin = isAdmin;
         }
+        
+        UserType(String[] selectTables, String[] vistas, String[] proc){
+            this(selectTables, vistas, proc, false);
+        }
+        
     }
     
     
