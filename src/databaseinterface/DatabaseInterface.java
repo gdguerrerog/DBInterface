@@ -34,7 +34,7 @@ public class DatabaseInterface {
 
     public static enum UserType{
         
-        ADMIN(Database.tables, Database.vistas), 
+        ADMIN(Database.tables, Database.vistas, true), 
         ALUMNO(EMPTY, ALUMNO_VISTAS),
         PROVIDER(EMPTY, PROVIDER_VISTAS),
         INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS),
@@ -46,11 +46,18 @@ public class DatabaseInterface {
         
         public final String[] selectTables;
         public final String[] selectVistas;
+        public final boolean isAdmin;
         
-        UserType(String[] selectTables, String[] vistas){
+        UserType(String[] selectTables, String[] vistas, boolean isAdmin){
             this.selectTables = selectTables;
             this.selectVistas = vistas;
+            this.isAdmin = isAdmin;
         }
+        
+        UserType(String[] selectTables, String[] vistas){
+            this(selectTables, vistas, false);
+        }
+        
     }
     
     
