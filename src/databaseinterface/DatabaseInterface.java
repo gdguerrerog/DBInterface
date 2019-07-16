@@ -23,13 +23,13 @@ public class DatabaseInterface {
     
     public static String[] EMPTY = {};
     public static String[] ALUMNO_VISTAS = {Database.vistas[0], Database.vistas[1], Database.vistas[2]};
-    public static String[] PROVIDER_VISTAS = {};
-    public static String[] INVERSIONISTA_VISTAS = {};
-    public static String[] PUBLICISTA_VISTAS = {};
-    public static String[] SECRETARIO_VISTAS = {};
-    public static String[] CONTADOR_VISTAS = {};
-    public static String[] ADMINISTRADOR_VISTAS = {Database.vistas[3]};
-    public static String[] DOCENTE_VISTAS = {};
+    public static String[] PROVIDER_VISTAS = {Database.vistas[17],Database.vistas[18],Database.vistas[19],Database.vistas[20],Database.vistas[21]};
+    public static String[] INVERSIONISTA_VISTAS = {Database.vistas[13],Database.vistas[14],Database.vistas[15],Database.vistas[16]};
+    public static String[] PUBLICISTA_VISTAS = {Database.vistas[22],Database.vistas[23],Database.vistas[24],Database.vistas[25]};
+    public static String[] SECRETARIO_VISTAS = {Database.vistas[26],Database.vistas[27],Database.vistas[28],Database.vistas[29],Database.vistas[30]};
+    public static String[] CONTADOR_VISTAS = {Database.vistas[6],Database.vistas[7],Database.vistas[8],Database.vistas[9]};
+    public static String[] ADMINISTRADOR_VISTAS = {Database.vistas[3],Database.vistas[4],Database.vistas[5]};
+    public static String[] DOCENTE_VISTAS = {Database.vistas[10],Database.vistas[11],Database.vistas[12]};
     
 
     public static enum UserType{
