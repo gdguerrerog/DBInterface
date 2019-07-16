@@ -20,7 +20,7 @@ public class Database {
     private Connection connection;
     
     public static final String[] tables = {"administrador", "alumno", "contador", "docente", "egreso", "imprenta", "ingreso", "inversionista", "movimiento_financiero", "personal", "produccion", "proveedor", "publicista", "secretario", "telefono", "tutoria"};
-    public static final String[][] columnNames = 
+    public static final String[][] tablesCNames = 
         {   {"Per_cedula"}, 
             {"Id_alumno", "Nombre", "Apellido", "Ciudad", "Direccion", "Nivel_escolaridad", "Frecuencia"},
             {"Per_cedula"},
@@ -42,13 +42,29 @@ public class Database {
     
     public static final String[] vistas = {"a_alumno", "a_docente", "a_personal", "admin_egreso"};
     public static final String[][] vistasCNames = 
-    {   {"Id_alumno", "Nombre", "Apellido", "Ciudad", "Dirección", "Nivel_escolaridad", "Frecuencia"},
+    {   {"Id_alumno", "Nombre", "Apellido", "Ciudad", "Direccion", "Nivel_escolaridad", "Frecuencia"},
         {"Campo_trabajo", "Nivel_educativo", "Per_cedula"},
         {"Nombre", "Apellido", "Cedula", "Antiguedad", "Experiencia_laboral"},
         {"Id_egreso", "Tipo", "Pro_NIT", "Mov_Recibo"},
     };
     
     public Database (){}
+    
+    public static int getTableIndexByName(String name){
+        for (int i = 0; i < tables.length; i++) {
+            if(tables[i].compareTo(name) == 0) return i;
+        }
+        
+        return -1;
+    }
+    
+    public static int getVistaIndexByName(String name){
+        for (int i = 0; i < vistas.length; i++) {
+            if(vistas[i].compareTo(name) == 0)return i;
+        }
+        
+        return -1;
+    }
     
     public boolean connect(String user, String password){
         try{          
@@ -59,6 +75,8 @@ public class Database {
             return false;
         }  
     }
+    
+    
     
     public String[][] getTable(String tableName, String[] columnNames){
         String table [][];
@@ -80,7 +98,6 @@ public class Database {
         }
         return values.toArray(new String[values.size()][]);
     }
-        
 }
     
 

@@ -36,6 +36,10 @@ public class MainPanel extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablesTables = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        combobox_view = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablesViews = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
 
@@ -83,15 +87,69 @@ public class MainPanel extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Tablas", jPanel1);
 
+        combobox_view.setModel(new javax.swing.DefaultComboBoxModel<>(databaseinterface.DatabaseInterface.user.selectVistas));
+        combobox_view.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                combobox_viewActionPerformed(evt);
+            }
+        });
+
+        tablesViews.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(tablesViews);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(combobox_view, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(251, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(combobox_view, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(350, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel5Layout.createSequentialGroup()
+                    .addGap(50, 50, 50)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(51, Short.MAX_VALUE)))
+        );
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 391, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 381, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("Vistas", jPanel2);
@@ -143,8 +201,12 @@ public class MainPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void combobox_tableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combobox_tableActionPerformed
-        databaseinterface.DatabaseInterface.createTable(combobox_table.getSelectedIndex());
+        databaseinterface.DatabaseInterface.createTableTables(combobox_table.getSelectedIndex());
     }//GEN-LAST:event_combobox_tableActionPerformed
+
+    private void combobox_viewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combobox_viewActionPerformed
+        databaseinterface.DatabaseInterface.createTableViews(combobox_view.getSelectedIndex());
+    }//GEN-LAST:event_combobox_viewActionPerformed
 
     public void setTableModelInTables(String[][] vals, String[] titles){
         DefaultTableModel model = new DefaultTableModel(vals, titles){
@@ -155,18 +217,31 @@ public class MainPanel extends javax.swing.JFrame {
         };
         
         tablesTables.setModel(model);
-        //model.fireTableDataChanged();
+    }
+    
+    public void setTableModelInViews(String[][] vals, String[] titles){
+        DefaultTableModel model = new DefaultTableModel(vals, titles){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
         
+        tablesViews.setModel(model);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> combobox_table;
+    private javax.swing.JComboBox<String> combobox_view;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable tablesTables;
+    private javax.swing.JTable tablesViews;
     // End of variables declaration//GEN-END:variables
 }

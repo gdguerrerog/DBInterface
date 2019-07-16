@@ -21,8 +21,9 @@ public class DatabaseInterface {
     
     public static UserType user;
     
+    public static String[] EMPTY = {};
     public static String[] ALUMNO_VISTAS = {Database.vistas[0], Database.vistas[1], Database.vistas[2]};
-    public static String[] PROVIER_VISTAS = {};
+    public static String[] PROVIDER_VISTAS = {};
     public static String[] INVERSIONISTA_VISTAS = {};
     public static String[] PUBLICISTA_VISTAS = {};
     public static String[] SECRETARIO_VISTAS = {};
@@ -34,23 +35,21 @@ public class DatabaseInterface {
     public static enum UserType{
         
         ADMIN(Database.tables, Database.vistas), 
-        ALUMNO(new String[]{}, ALUMNO_VISTAS),
-        PROVIDER(new String[]{}, PROVIER_VISTAS),
-        INVERSIONISTA(new String[]{}, INVERSIONISTA_VISTAS),
-        PUBLICISTA(new String[]{}, PUBLICISTA_VISTAS),
-        SECRETARIO(new String[]{}, SECRETARIO_VISTAS),
-        CONTADOR(new String[]{}, CONTADOR_VISTAS),
-        ADMINISTRADOR(new String[]{}, ADMINISTRADOR_VISTAS),
-        DOCENTE(new String[]{}, DOCENTE_VISTAS);
-        
-        
+        ALUMNO(EMPTY, ALUMNO_VISTAS),
+        PROVIDER(EMPTY, PROVIDER_VISTAS),
+        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS),
+        PUBLICISTA(EMPTY, PUBLICISTA_VISTAS),
+        SECRETARIO(EMPTY, SECRETARIO_VISTAS),
+        CONTADOR(EMPTY, CONTADOR_VISTAS),
+        ADMINISTRADOR(EMPTY, ADMINISTRADOR_VISTAS),
+        DOCENTE(EMPTY, DOCENTE_VISTAS);
         
         public final String[] selectTables;
-        public final String[] vistas;
+        public final String[] selectVistas;
         
         UserType(String[] selectTables, String[] vistas){
             this.selectTables = selectTables;
-            this.vistas = vistas;
+            this.selectVistas = vistas;
         }
     }
     
@@ -86,13 +85,24 @@ public class DatabaseInterface {
         }
     }
     
-    public static void createTable(int index){
-        String[][] model = database.getTable(database.tables[index], Database.columnNames[index]);
-        String[] titles = Database.columnNames[index];
+    public static void createTableTables(int index){
+        
+        int newIndex = Database.getTableIndexByName(user.selectTables[index]);
+        
+        String[] titles = Database.tablesCNames[newIndex];
+        String[][] model = database.getTable(user.selectTables[index], titles);
         
         mainPanel.setTableModelInTables(model, titles);
+    }
+    
+    public static void createTableViews(int index){
         
+        int newIndex = Database.getVistaIndexByName(user.selectVistas[index]);
         
+        String[] titles = Database.vistasCNames[newIndex];
+        String[][] model = database.getTable(user.selectVistas[index], titles);
+        
+        mainPanel.setTableModelInViews(model, titles);  
     }
     
     public static void main(String[] args) {
