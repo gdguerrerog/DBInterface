@@ -31,11 +31,6 @@ public class MainPanel extends javax.swing.JFrame {
         }
     }
     
-    
-
-    
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -193,25 +188,22 @@ public class MainPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_create_buttonActionPerformed
 
     public void setTableModelInTables(String[][] vals, String[] titles){
-        DefaultTableModel model = new DefaultTableModel(vals, titles){
-            @Override
-            public boolean isCellEditable(int row, int column) {
-               return false;
-            }
-        };
-        
+        TableModel model = init(vals, titles);
         tablesTables.setModel(model);
     }
     
     public void setTableModelInViews(String[][] vals, String[] titles){
-        DefaultTableModel model = new DefaultTableModel(vals, titles){
+        TableModel model = init(vals, titles);
+        tablesViews.setModel(model);
+    }
+    
+    private static TableModel init(String[][] vals, String[] titles){
+        return new DefaultTableModel(vals, titles){
             @Override
             public boolean isCellEditable(int row, int column) {
                return false;
             }
         };
-        
-        tablesViews.setModel(model);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

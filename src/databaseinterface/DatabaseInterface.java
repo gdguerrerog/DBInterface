@@ -5,6 +5,7 @@
  */
 package databaseinterface;
 
+import GUI.CreateDialog;
 import GUI.LogInPanel;
 import GUI.MainPanel;
 import data_access.Database;
@@ -110,6 +111,17 @@ public class DatabaseInterface {
         String[][] model = database.getTable(user.selectVistas[index], titles);
         
         mainPanel.setTableModelInViews(model, titles);  
+    }
+    
+    public static void insert(int index, String[] values, CreateDialog dialog){
+        dialog.setInfoText("Insertando...");
+        
+        int newIndex = Database.getTableIndexByName(user.selectTables[index]);
+        
+        String result = database.insert(Database.tables[newIndex], Database.tablesCNames[newIndex], values);
+        
+        if(result != null) dialog.setInfoText("Error insertando. Msg: " + result);
+        else dialog.setInfoText("Insertado");
     }
     
     public static void main(String[] args) {
