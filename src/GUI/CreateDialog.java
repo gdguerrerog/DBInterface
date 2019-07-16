@@ -139,7 +139,7 @@ public class CreateDialog extends javax.swing.JDialog {
         infoLabel.setText(text);
     }
     
-    public class PanelAttribute extends javax.swing.JPanel {
+    public static class PanelAttribute extends javax.swing.JPanel {
 
         public PanelAttribute(String labelText) {
             initComponents(labelText);
@@ -174,8 +174,8 @@ public class CreateDialog extends javax.swing.JDialog {
 
 
         // Variables declaration - do not modify                     
-        private javax.swing.JLabel label;
-        private javax.swing.JTextField textField;
+        public javax.swing.JLabel label;
+        public javax.swing.JTextField textField;
         // End of variables declaration                   
     }
 

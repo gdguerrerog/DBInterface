@@ -5,7 +5,11 @@
  */
 package GUI;
 
+import data_access.Database;
 import java.awt.Component;
+import java.awt.GridLayout;
+import java.util.LinkedList;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -16,7 +20,7 @@ import javax.swing.table.TableModel;
 public class MainPanel extends javax.swing.JFrame {
 
     private Component[] adminComponents;
-    
+    private JTextField[] procTextFields;
     /**
      * Creates new form MainPanel
      */
@@ -51,6 +55,12 @@ public class MainPanel extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablesViews = new javax.swing.JTable();
         create_button1 = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        combobox_view1 = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablesViews1 = new javax.swing.JTable();
+        create_button2 = new javax.swing.JButton();
+        proceduresInput = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,6 +165,67 @@ public class MainPanel extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Vistas", jPanel6);
 
+        combobox_view1.setModel(new javax.swing.DefaultComboBoxModel<>(databaseinterface.DatabaseInterface.user.proc));
+        combobox_view1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                combobox_view1ActionPerformed(evt);
+            }
+        });
+
+        tablesViews1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(tablesViews1);
+
+        create_button2.setText("Ejecutar");
+
+        javax.swing.GroupLayout proceduresInputLayout = new javax.swing.GroupLayout(proceduresInput);
+        proceduresInput.setLayout(proceduresInputLayout);
+        proceduresInputLayout.setHorizontalGroup(
+            proceduresInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        proceduresInputLayout.setVerticalGroup(
+            proceduresInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 161, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(proceduresInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(combobox_view1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(create_button2)))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(combobox_view1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(create_button2))
+                .addGap(18, 18, 18)
+                .addComponent(proceduresInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Procedimientos", jPanel7);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,6 +258,29 @@ public class MainPanel extends javax.swing.JFrame {
         new CreateDialog().setVisible(true);
     }//GEN-LAST:event_create_buttonActionPerformed
 
+    private void combobox_view1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combobox_view1ActionPerformed
+        String[] newLabels = Database.getProcByName(combobox_view1.getSelectedItem().toString()).parametros;
+       
+        
+        proceduresInput.removeAll();
+        proceduresInput.setLayout(new GridLayout(newLabels.length, 1));
+        
+        LinkedList<JTextField> lista = new LinkedList();
+        CreateDialog.PanelAttribute tmp;
+        for (String newLabel : newLabels) {
+            tmp = new CreateDialog.PanelAttribute(newLabel);
+            proceduresInput.add(tmp);
+            lista.add(tmp.textField);
+        }
+        
+        procTextFields = lista.toArray(new JTextField[lista.size()]);
+        
+        setSize(500, 180 + 40 * newLabels.length);
+        setLocationRelativeTo(null);
+        revalidate();
+        repaint();
+    }//GEN-LAST:event_combobox_view1ActionPerformed
+
     public void setTableModelInTables(String[][] vals, String[] titles){
         TableModel model = init(vals, titles);
         tablesTables.setModel(model);
@@ -209,14 +303,20 @@ public class MainPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> combobox_table;
     private javax.swing.JComboBox<String> combobox_view;
+    private javax.swing.JComboBox<String> combobox_view1;
     private javax.swing.JButton create_button;
     private javax.swing.JButton create_button1;
+    private javax.swing.JButton create_button2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel proceduresInput;
     private javax.swing.JTable tablesTables;
     private javax.swing.JTable tablesViews;
+    private javax.swing.JTable tablesViews1;
     // End of variables declaration//GEN-END:variables
 }
