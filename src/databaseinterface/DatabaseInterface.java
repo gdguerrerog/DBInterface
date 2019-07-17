@@ -9,7 +9,7 @@ import GUI.ParamDialog;
 import GUI.LogInPanel;
 import GUI.MainPanel;
 import data_access.Database;
-import java.util.LinkedList;
+import data_access.Database.Procedimiento;
 
 /**
  *
@@ -33,11 +33,11 @@ public class DatabaseInterface {
     public static String[] ADMINISTRADOR_VISTAS = {Database.vistas[3],Database.vistas[4],Database.vistas[5]};
     public static String[] DOCENTE_VISTAS = {Database.vistas[10],Database.vistas[11],Database.vistas[12]};
       
-    public static String[] PROVIDER_PROC = {Database.procedure[4].nombre};
-    public static String[] PUBLICISTA_PROC = {Database.procedure[4].nombre};
-    public static String[] SECRETARIO_PROC = {Database.procedure[0].nombre,Database.procedure[1].nombre,Database.procedure[2].nombre,Database.procedure[3].nombre,Database.procedure[5].nombre,Database.procedure[6].nombre,Database.procedure[7].nombre,Database.procedure[8].nombre,Database.procedure[9].nombre};
-    public static String[] ADMINISTRADOR_PROC = {Database.procedure[0].nombre,Database.procedure[1].nombre,Database.procedure[2].nombre,Database.procedure[3].nombre,Database.procedure[5].nombre,Database.procedure[6].nombre,Database.procedure[7].nombre,Database.procedure[8].nombre,Database.procedure[9].nombre};
-    public static String[] ADMINDB_PROC = {Database.procedure[0].nombre,Database.procedure[1].nombre,Database.procedure[2].nombre,Database.procedure[3].nombre,Database.procedure[4].nombre,Database.procedure[5].nombre,Database.procedure[6].nombre,Database.procedure[7].nombre,Database.procedure[8].nombre,Database.procedure[9].nombre};
+    public static Procedimiento[] PROVIDER_PROC = {Database.procedure[4]};
+    public static Procedimiento[] PUBLICISTA_PROC = {Database.procedure[4]};
+    public static Procedimiento[] SECRETARIO_PROC = {Database.procedure[0],Database.procedure[1],Database.procedure[2],Database.procedure[3],Database.procedure[5],Database.procedure[6],Database.procedure[7],Database.procedure[8],Database.procedure[9]};
+    public static Procedimiento[] ADMINISTRADOR_PROC = {Database.procedure[0],Database.procedure[1],Database.procedure[2],Database.procedure[3],Database.procedure[5],Database.procedure[6],Database.procedure[7],Database.procedure[8],Database.procedure[9]};
+    public static Procedimiento[] ADMINDB_PROC = {Database.procedure[0],Database.procedure[1],Database.procedure[2],Database.procedure[3],Database.procedure[4],Database.procedure[5],Database.procedure[6],Database.procedure[7],Database.procedure[8],Database.procedure[9]};
 
 
     
@@ -45,31 +45,38 @@ public class DatabaseInterface {
     public static enum UserType{
         
         ADMIN(Database.tables, Database.vistas, ADMINDB_PROC, true), 
-        ALUMNO(EMPTY, ALUMNO_VISTAS, EMPTY),
+        ALUMNO(EMPTY, ALUMNO_VISTAS, new Procedimiento[]{}),
         PROVIDER(EMPTY, PROVIDER_VISTAS, PROVIDER_PROC),
-        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS,EMPTY),
+        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS,new Procedimiento[]{}),
         PUBLICISTA(EMPTY, PUBLICISTA_VISTAS,PUBLICISTA_PROC),
         SECRETARIO(EMPTY, SECRETARIO_VISTAS,SECRETARIO_PROC),
-        CONTADOR(EMPTY, CONTADOR_VISTAS,EMPTY),
+        CONTADOR(EMPTY, CONTADOR_VISTAS,new Procedimiento[]{}),
         ADMINISTRADOR(EMPTY, ADMINISTRADOR_VISTAS,ADMINISTRADOR_PROC),
-        DOCENTE(EMPTY, DOCENTE_VISTAS, EMPTY);
+        DOCENTE(EMPTY, DOCENTE_VISTAS, new Procedimiento[]{});
         
         public final String[] selectTables;
         public final String[] selectVistas;
-        public final String[] proc;
+        public final Procedimiento[] proc;
         public final boolean isAdmin;
         
-        UserType(String[] selectTables, String[] vistas, String[] proc, boolean isAdmin){
+        UserType(String[] selectTables, String[] vistas, Procedimiento[] proc, boolean isAdmin){
             this.selectTables = selectTables;
             this.selectVistas = vistas;
             this.proc = proc;
             this.isAdmin = isAdmin;
         }
         
-        UserType(String[] selectTables, String[] vistas, String[] proc){
+        UserType(String[] selectTables, String[] vistas, Procedimiento[] proc){
             this(selectTables, vistas, proc, false);
         }
         
+        public String[] procToString(){
+            String[] result = new String[proc.length];
+            for (int i = 0; i < proc.length; i++) {
+                result[i] = proc[i].nombre;
+            }
+            return result;
+        }
     }
     
     
@@ -133,6 +140,14 @@ public class DatabaseInterface {
         
         if(result != null) dialog.setInfoText("Error insertando. Msg: " + result);
         else dialog.setInfoText("Insertado");
+    }
+    public static void executeProcedure(Procedimiento procedure, String[] params){
+        mainPanel.setProcInfo("Ejecutando procedimiento ....");
+        database.executeProcedure(procedure,params);
+    
+    }
+    public static void executeProcedureWithReturn(Procedimiento procedure, String[] params){
+        
     }
     
     public static void delete(int index, String[] values){
