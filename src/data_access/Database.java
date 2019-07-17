@@ -30,7 +30,7 @@ public class Database {
             {"Id_ingreso", "Tipo", "Mov_Recibo"},
             {"Id_inversionista", "Nombre", "Interes", "Correo", "Representante"},
             {"Recibo", "Fecha", "Cantidad", "Remitente", "Receptor", "Tipo", "Cedula_contador"},
-            {"Cedula", "Ciudad", "Direccion", "Antiguedad", "Nombre", "Apellido", "Horario", "Edad", "Experiencia_laboral", "Sueldo"},
+            {"Cedula", "Correo", "Ciudad", "Direccion", "Antiguedad", "Nombre", "Apellido", "Horario", "Edad", "Experiencia_laboral", "Sueldo"},
             {"Id_Produccion", "Porc_inversion", "Id_Inversion", "Id_ingreso", "Id_egreso"},
             {"NIT_proveedor", "Nombre", "Tarifa", "Direccion", "Ciudad", "Enfoque", "Correo", "Representante", "Adm_cedula"},
             {"Per_cedula"},
@@ -183,6 +183,57 @@ public class Database {
         }
         
         queryString += ") ";
+        
+        try {
+            Statement st = connection.createStatement();
+            st.executeUpdate(queryString);
+            
+            return null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+    }
+    
+    public String delete(String tableName, String[] columnNames, String[] info){
+        String queryString = String.format("DELETE FROM %s WHERE ", tableName);
+
+        for (int i = 0; i < columnNames.length; i++) {
+            queryString += String.format("%s = '%s' ", columnNames[i], info[i]) ;
+            if (i + 1 < columnNames.length) queryString += "AND ";   
+        }
+        
+        try {
+            Statement st = connection.createStatement();
+            st.executeUpdate(queryString);
+            
+            return null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
+    }
+    
+    public String update(String tableName, String[] columnNames, String[] oldInfo, String[] newInfo){
+        String queryString = String.format("UPDATE %s SET ", tableName);
+
+        boolean useAnd = false;
+        
+        for (int i = 0; i < columnNames.length; i++) {
+            if(newInfo[i] != null){
+                if (useAnd) queryString += "AND "; 
+                queryString += String.format("%s = '%s' ", columnNames[i], newInfo[i]) ;
+                useAnd = true;
+            }
+            
+        }
+        
+        queryString += "WHERE ";
+        
+        for (int i = 0; i < columnNames.length; i++) {
+            queryString += String.format("%s = '%s' ", columnNames[i], oldInfo[i]) ;
+            if (i + 1 < columnNames.length) queryString += "AND ";   
+        }
         
         try {
             Statement st = connection.createStatement();

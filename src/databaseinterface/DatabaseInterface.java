@@ -5,10 +5,11 @@
  */
 package databaseinterface;
 
-import GUI.CreateDialog;
+import GUI.ParamDialog;
 import GUI.LogInPanel;
 import GUI.MainPanel;
 import data_access.Database;
+import java.util.LinkedList;
 
 /**
  *
@@ -123,7 +124,7 @@ public class DatabaseInterface {
         mainPanel.setTableModelInViews(model, titles);  
     }
     
-    public static void insert(int index, String[] values, CreateDialog dialog){
+    public static void insert(int index, String[] values, ParamDialog dialog){
         dialog.setInfoText("Insertando...");
         
         int newIndex = Database.getTableIndexByName(user.selectTables[index]);
@@ -132,6 +133,40 @@ public class DatabaseInterface {
         
         if(result != null) dialog.setInfoText("Error insertando. Msg: " + result);
         else dialog.setInfoText("Insertado");
+    }
+    
+    public static void delete(int index, String[] values){
+        mainPanel.setTableInfoText("Borrando...");
+        
+        int newIndex = Database.getTableIndexByName(user.selectTables[index]);
+        
+        String result = database.delete(Database.tables[newIndex], Database.tablesCNames[newIndex], values);
+        
+        if(result != null) mainPanel.setTableInfoText("Error Borrando. Msg: " + result);
+        else {
+            mainPanel.setTableInfoText("Borrado");
+            createTableTables(index);
+        }
+    }
+    
+    public static void update(int index, String[] values, String[] old, ParamDialog dialog){
+        dialog.setInfoText("Actualizando...");
+        
+        int newIndex = Database.getTableIndexByName(user.selectTables[index]);
+        
+        String[] updatedValues = new String[values.length];
+        for (int i = 0; i < values.length; i++) {
+            if(values[i].compareTo(old[i]) != 0) updatedValues[i] = values[i];
+        }
+        
+        String result = database.update(Database.tables[newIndex], Database.tablesCNames[newIndex], old, updatedValues);
+        
+        if(result != null) dialog.setInfoText("Error actualizando. Msg: " + result);
+        else {
+            dialog.setInfoText("Actualizado");
+            createTableTables(index);
+            dialog.dispose();
+        }
     }
     
     public static void main(String[] args) {

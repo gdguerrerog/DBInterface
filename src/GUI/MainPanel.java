@@ -26,6 +26,8 @@ public class MainPanel extends javax.swing.JFrame {
      */
     public MainPanel() {
         initComponents();
+        tablesTables.getTableHeader().setReorderingAllowed(false);
+        tablesViews.getTableHeader().setReorderingAllowed(false);
         
         adminComponents = new Component[]{create_button};
         if(!databaseinterface.DatabaseInterface.user.isAdmin){
@@ -50,6 +52,9 @@ public class MainPanel extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablesTables = new javax.swing.JTable();
         create_button = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        tableInfoLabel = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         combobox_view = new javax.swing.JComboBox<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -88,6 +93,22 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("Borrar Seleccionado");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        tableInfoLabel.setText("Buenos Dias");
+
+        jButton2.setText("Actualizar Seleccionado");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -99,7 +120,13 @@ public class MainPanel extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(combobox_table, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(create_button))
+                            .addComponent(tableInfoLabel)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(create_button)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -111,8 +138,12 @@ public class MainPanel extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(create_button)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(create_button)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addComponent(tableInfoLabel))
         );
 
         jTabbedPane1.addTab("Tablas", jPanel1);
@@ -255,7 +286,7 @@ public class MainPanel extends javax.swing.JFrame {
     }//GEN-LAST:event_combobox_tableActionPerformed
 
     private void create_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_buttonActionPerformed
-        new CreateDialog().setVisible(true);
+        new ParamDialog().setVisible(true);
     }//GEN-LAST:event_create_buttonActionPerformed
 
     private void combobox_view1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combobox_view1ActionPerformed
@@ -266,9 +297,9 @@ public class MainPanel extends javax.swing.JFrame {
         proceduresInput.setLayout(new GridLayout(newLabels.length, 1));
         
         LinkedList<JTextField> lista = new LinkedList();
-        CreateDialog.PanelAttribute tmp;
+        ParamDialog.PanelAttribute tmp;
         for (String newLabel : newLabels) {
-            tmp = new CreateDialog.PanelAttribute(newLabel);
+            tmp = new ParamDialog.PanelAttribute(newLabel);
             proceduresInput.add(tmp);
             lista.add(tmp.textField);
         }
@@ -281,6 +312,29 @@ public class MainPanel extends javax.swing.JFrame {
         repaint();
     }//GEN-LAST:event_combobox_view1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String[] values = new String[tablesTables.getColumnCount()];
+        int selected = tablesTables.getSelectedRow();
+        for (int i = 0; i < values.length; i++) {
+            values[i] = tablesTables.getValueAt(selected, i).toString();
+        }
+        
+        databaseinterface.DatabaseInterface.delete(combobox_table.getSelectedIndex(), values);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        int index = combobox_table.getSelectedIndex();
+        
+        String[] values = new String[tablesTables.getColumnCount()];
+        int selected = tablesTables.getSelectedRow();
+        for (int i = 0; i < values.length; i++) {
+            values[i] = tablesTables.getValueAt(selected, i).toString();
+        }
+        
+        new ParamDialog(index, values).setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     public void setTableModelInTables(String[][] vals, String[] titles){
         TableModel model = init(vals, titles);
         tablesTables.setModel(model);
@@ -289,6 +343,10 @@ public class MainPanel extends javax.swing.JFrame {
     public void setTableModelInViews(String[][] vals, String[] titles){
         TableModel model = init(vals, titles);
         tablesViews.setModel(model);
+    }
+    
+    public void setTableInfoText(String info){
+        tableInfoLabel.setText(info);
     }
     
     private static TableModel init(String[][] vals, String[] titles){
@@ -307,6 +365,8 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JButton create_button;
     private javax.swing.JButton create_button1;
     private javax.swing.JButton create_button2;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -315,6 +375,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel proceduresInput;
+    private javax.swing.JLabel tableInfoLabel;
     private javax.swing.JTable tablesTables;
     private javax.swing.JTable tablesViews;
     private javax.swing.JTable tablesViews1;

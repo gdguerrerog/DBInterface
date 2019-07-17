@@ -13,20 +13,38 @@ import javax.swing.JTextField;
  *
  * @author German le yo
  */
-public class CreateDialog extends javax.swing.JDialog {
+public class ParamDialog extends javax.swing.JDialog {
 
     
     private JTextField[] textFields;
-    
-    /**
-     * Creates new form CreateDialog
-     */
-    public CreateDialog() {
+    private boolean create;
+    private String[] oldInfo;
+
+    public ParamDialog() {
         initComponents();
         setModal(true);
         setLocationRelativeTo(null);
+        create = true;
     }
-
+    
+    public ParamDialog(int index, String[] paramValues){
+        this();
+        
+        oldInfo = paramValues;
+        
+        create = false;
+        jComboBox1.setSelectedIndex(index);
+        jComboBox1.setEditable(false);
+        create_button.setText("Actualizar");
+        infoLabel.setText("Escriba los datos del elemento a editar");
+        
+        for (int i = 0; i < paramValues.length; i++) {
+            textFields[i].setText(paramValues[i]);
+        }
+        
+        
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -126,15 +144,29 @@ public class CreateDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void create_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_buttonActionPerformed
+        if(create) createAction();
+        else updateAction();
         
+    }//GEN-LAST:event_create_buttonActionPerformed
+
+    private void createAction(){
         String[] values = new String[textFields.length];
         for (int i = 0; i < values.length; i++) {
             values[i] = textFields[i].getText();
         }
         
         databaseinterface.DatabaseInterface.insert(jComboBox1.getSelectedIndex(), values, this);
-    }//GEN-LAST:event_create_buttonActionPerformed
-
+    }
+    
+    private void updateAction(){
+        String[] values = new String[textFields.length];
+        for (int i = 0; i < values.length; i++) {
+            values[i] = textFields[i].getText();
+        }
+        
+        databaseinterface.DatabaseInterface.update(jComboBox1.getSelectedIndex(), values, oldInfo, this);
+    }
+    
     public void setInfoText(String text){
         infoLabel.setText(text);
     }
