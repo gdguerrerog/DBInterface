@@ -75,30 +75,55 @@ public class Database {
         
     };
     public static Procedimiento[] procedure = new Procedimiento[]{
-        new Procedimiento("PAs_1", new String[]{"Porcentaje Aumento","Nivel de Estudio"}),
-        new Procedimiento("PAs_2", new String[]{"Porcentaje Aumento","Nombre Personal"}),
-        new Procedimiento("PAs_3", new String[]{"Cedula Contador"}),
-        new Procedimiento("PAs_4", new String[]{"Porcentaje Aumento","Cedula Contador"}),
-        new Procedimiento("PAs_5", new String[]{"NIT","Porcentaje Tarifa"}),
-        new Procedimiento("PAs_6", new String[]{"Cedula del Docente","Campo de Trabajo","Nivel Educativo"}),
-        new Procedimiento("PAs_7", new String[]{"Cedula de la Persona"}),
-        new Procedimiento("PAs_8", new String[]{"Sueldo"}),
-        new Procedimiento("PAs_9", new String[]{"Número"}),
-        new Procedimiento("PAs_10", new String[]{"Tema Clase"})
+        new Procedimiento("PAs_1", new String[]{"Porcentaje Aumento","Nivel de Estudio"},false),
+        new Procedimiento("PAs_2", new String[]{"Porcentaje Aumento","Nombre Personal"},false),
+        new Procedimiento("PAs_3", new String[]{"Cedula Contador"},true),
+        new Procedimiento("PAs_4", new String[]{"Porcentaje Aumento","Cedula Contador"},false),
+        new Procedimiento("PAs_5", new String[]{"NIT","Porcentaje Tarifa"},true),
+        new Procedimiento("PAs_6", new String[]{"Cedula del Docente","Campo de Trabajo","Nivel Educativo"},false),
+        new Procedimiento("PAs_7", new String[]{"Cedula de la Persona"},true),
+        new Procedimiento("PAs_8", new String[]{"Sueldo"},true),
+        new Procedimiento("PAs_9", new String[]{"Número"},false),
+        new Procedimiento("PAs_10", new String[]{"Tema Clase"},false)
     };
-    
+    public static Funcion[] funciones = new Funcion[]{
+        new Funcion("funcion_1",  new String[]{"Cedula","Aumento"}),
+        new Funcion("funcion_2",  new String[]{"Personal"}),
+        new Funcion("func_3",  new String[]{"Nombre Publicista"}),
+        new Funcion("func_4",  new String[]{"Nombre Docente"}),
+        new Funcion("func_5",  new String[]{"Nombre Estudiante"}),
+        new Funcion("funct_6",  new String[]{"Tipo de Movimiento"}),
+        new Funcion("funcion_7",  new String[]{"Nombre Publicista"}),
+        new Funcion("func_8",  new String[]{"Cedula Administrador"}),
+        new Funcion("func_9",  new String[]{"Id Ingresos"}),
+        new Funcion("func_10",  new String[]{"Entidad","Operador"}),
+
+
+
+    };
    
     
     public static class Procedimiento{
         public final String nombre;
         public final String[] parametros;
-        public Procedimiento(String nom, String[] param ){
+        public final boolean hasOutput;
+        public Procedimiento(String nom, String[] param, boolean output ){
             nombre = nom;
             parametros = param;
+            hasOutput = output;
         }
         
         @Override
         public String toString(){ return nombre; }
+    }
+    
+    public static class Funcion{
+        public final String nombre;
+        public final String[] parametros;
+        public Funcion(String nom, String[] params){
+            nombre = nom;
+            parametros = params;
+        }
     }
     
     
@@ -109,6 +134,12 @@ public class Database {
     public static Procedimiento getProcByName(String name){
         for (int i = 0; i < procedure.length ; i++) {
             if (procedure[i].nombre.compareTo(name)==0) return procedure[i];
+        }
+        return null;
+    }
+    public static Funcion getFunByName(String name){
+        for (int i = 0; i < funciones.length ; i++) {
+            if (funciones[i].nombre.compareTo(name)==0) return funciones[i];
         }
         return null;
     }
@@ -180,6 +211,67 @@ public class Database {
         }catch (Exception ex) {
             ex.printStackTrace();
             return ex.getMessage();
+        }
+    }
+     public String[] executeProcedureWithReturn(Procedimiento procedure, String[] params){
+        String queryString = String.format("{call %s(",procedure.nombre) ;
+        for (int i = 0; i < procedure.parametros.length; i++) {
+            queryString+="?,";
+            
+        }
+        if (procedure.nombre=="PAs_8") {
+            queryString = queryString.substring(0, queryString.length()-1);
+            queryString +=")}";
+        }
+        else queryString +="?)}";;
+        
+        String[] sout = new String[2];
+        try{
+            CallableStatement stmt = connection.prepareCall(queryString);    
+            
+            for (int i = 0; i < procedure.parametros.length; i++){ 
+           
+                stmt.setString(i+1, params[i]);
+            }
+            if (procedure.nombre=="PAs_8") stmt.registerOutParameter(procedure.parametros.length, Types.VARCHAR);
+            else stmt.registerOutParameter(procedure.parametros.length+1, Types.VARCHAR);
+            stmt.execute();
+            if (procedure.nombre=="PAs_8") sout[0]=stmt.getString(procedure.parametros.length);
+            else sout[0]=stmt.getString(procedure.parametros.length+1);
+            return sout;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            sout[0]=null;
+            sout[1]=ex.getMessage();
+            return sout;
+        }
+    }
+     
+    public String[] executeFunc(Funcion fun, String[] params){
+        String queryString = "{? = call " + fun.nombre + "(";
+        for (int i = 0; i < fun.parametros.length; i++) {
+            queryString+="?,";
+        }
+        queryString = queryString.substring(0, queryString.length()-1);
+        queryString +=")}";
+        String[] sout = new String[2];
+
+        try{
+            CallableStatement stmt = connection.prepareCall(queryString);    
+            stmt.registerOutParameter(1, Types.VARCHAR);
+            for (int i = 0; i < fun.parametros.length; i++){ 
+                stmt.setString(i+2, params[i]);
+            }
+            
+            stmt.execute();
+            sout[0]=stmt.getString(1);
+            sout[1]="";
+            return sout;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            sout[0]=ex.getMessage();
+            sout[1]=null;
+            return sout;
         }
     }
 

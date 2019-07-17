@@ -64,7 +64,7 @@
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(data_access.Database.tables)" type="code"/>
+          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;((vistas) ? data_access.Database.vistas : data_access.Database.tables )" type="code"/>
         </Property>
       </Properties>
       <Events>

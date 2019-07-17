@@ -19,16 +19,19 @@ public class ParamDialog extends javax.swing.JDialog {
     private JTextField[] textFields;
     private boolean create;
     private String[] oldInfo;
-
-    public ParamDialog() {
+    private boolean vistas;
+    
+    public ParamDialog(boolean isVistas) {
+        vistas = isVistas;
         initComponents();
         setModal(true);
         setLocationRelativeTo(null);
         create = true;
+        
     }
     
-    public ParamDialog(int index, String[] paramValues){
-        this();
+    public ParamDialog(int index, String[] paramValues, boolean isVistas){
+        this(isVistas);
         
         oldInfo = paramValues;
         
@@ -56,7 +59,7 @@ public class ParamDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(data_access.Database.tables));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>((vistas) ? data_access.Database.vistas : data_access.Database.tables ));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -155,7 +158,7 @@ public class ParamDialog extends javax.swing.JDialog {
             values[i] = textFields[i].getText();
         }
         
-        databaseinterface.DatabaseInterface.insert(jComboBox1.getSelectedIndex(), values, this);
+        databaseinterface.DatabaseInterface.insert(jComboBox1.getSelectedIndex(), values, this, vistas);
     }
     
     private void updateAction(){
@@ -164,7 +167,7 @@ public class ParamDialog extends javax.swing.JDialog {
             values[i] = textFields[i].getText();
         }
         
-        databaseinterface.DatabaseInterface.update(jComboBox1.getSelectedIndex(), values, oldInfo, this);
+        databaseinterface.DatabaseInterface.update(jComboBox1.getSelectedIndex(), values, oldInfo, this, vistas);
     }
     
     public void setInfoText(String text){
