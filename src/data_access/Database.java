@@ -96,6 +96,9 @@ public class Database {
             nombre = nom;
             parametros = param;
         }
+        
+        @Override
+        public String toString(){ return nombre; }
     }
     
     
@@ -157,6 +160,27 @@ public class Database {
             ex.printStackTrace();
         }
         return values.toArray(new String[values.size()][]);
+    }
+    
+    public String executeProcedure(Procedimiento procedure, String[] params){
+        String queryString = String.format("{call %s(",procedure.nombre) ;
+        for (int i = 0; i < procedure.parametros.length; i++) {
+            queryString+="?,";
+        }
+        queryString = queryString.substring(0, queryString.length()-1);
+        queryString +=")}";
+        
+        try{
+            CallableStatement stmt = connection.prepareCall(queryString);        
+            for (int i = 0; i < procedure.parametros.length; i++) {
+                stmt.setString(i+1, params[i]);
+            }
+            stmt.executeQuery();
+            return null;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            return ex.getMessage();
+        }
     }
 
     

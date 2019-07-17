@@ -61,6 +61,7 @@ public class MainPanel extends javax.swing.JFrame {
         tablesViews1 = new javax.swing.JTable();
         create_button2 = new javax.swing.JButton();
         proceduresInput = new javax.swing.JPanel();
+        infoLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -95,7 +96,7 @@ public class MainPanel extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(combobox_table, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -143,7 +144,7 @@ public class MainPanel extends javax.swing.JFrame {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(combobox_view, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -165,7 +166,7 @@ public class MainPanel extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Vistas", jPanel6);
 
-        combobox_view1.setModel(new javax.swing.DefaultComboBoxModel<>(databaseinterface.DatabaseInterface.user.proc));
+        combobox_view1.setModel(new javax.swing.DefaultComboBoxModel<>(databaseinterface.DatabaseInterface.user.procToString()));
         combobox_view1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 combobox_view1ActionPerformed(evt);
@@ -183,6 +184,11 @@ public class MainPanel extends javax.swing.JFrame {
         jScrollPane3.setViewportView(tablesViews1);
 
         create_button2.setText("Ejecutar");
+        create_button2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                create_button2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout proceduresInputLayout = new javax.swing.GroupLayout(proceduresInput);
         proceduresInput.setLayout(proceduresInputLayout);
@@ -192,7 +198,7 @@ public class MainPanel extends javax.swing.JFrame {
         );
         proceduresInputLayout.setVerticalGroup(
             proceduresInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 161, Short.MAX_VALUE)
+            .addGap(0, 90, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -203,9 +209,11 @@ public class MainPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(proceduresInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
                         .addComponent(combobox_view1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74)
+                        .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(create_button2)))
                 .addContainerGap())
@@ -216,11 +224,12 @@ public class MainPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(combobox_view1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(create_button2))
+                    .addComponent(create_button2)
+                    .addComponent(infoLabel))
                 .addGap(18, 18, 18)
-                .addComponent(proceduresInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(proceduresInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -258,13 +267,22 @@ public class MainPanel extends javax.swing.JFrame {
         new CreateDialog().setVisible(true);
     }//GEN-LAST:event_create_buttonActionPerformed
 
+    private void create_button2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_button2ActionPerformed
+        Database.Procedimiento proc = (Database.getProcByName(combobox_view1.getSelectedItem().toString()));
+
+        String[] params = new String[procTextFields.length];
+        for (int i = 0; i < params.length; i++) {
+            params[i]=procTextFields[i].getText();
+        }
+        databaseinterface.DatabaseInterface.executeProcedure(proc, params);
+    }//GEN-LAST:event_create_button2ActionPerformed
+
     private void combobox_view1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combobox_view1ActionPerformed
-        String[] newLabels = Database.getProcByName(combobox_view1.getSelectedItem().toString()).parametros;
-       
-        
+        String[] newLabels = (Database.getProcByName(combobox_view1.getSelectedItem().toString())).parametros;
+
         proceduresInput.removeAll();
         proceduresInput.setLayout(new GridLayout(newLabels.length, 1));
-        
+
         LinkedList<JTextField> lista = new LinkedList();
         CreateDialog.PanelAttribute tmp;
         for (String newLabel : newLabels) {
@@ -272,11 +290,11 @@ public class MainPanel extends javax.swing.JFrame {
             proceduresInput.add(tmp);
             lista.add(tmp.textField);
         }
-        
+
         procTextFields = lista.toArray(new JTextField[lista.size()]);
-        
-        setSize(500, 180 + 40 * newLabels.length);
-        setLocationRelativeTo(null);
+
+        //setSize(500, 180 + 40 * newLabels.length);
+        //setLocationRelativeTo(null);
         revalidate();
         repaint();
     }//GEN-LAST:event_combobox_view1ActionPerformed
@@ -286,9 +304,13 @@ public class MainPanel extends javax.swing.JFrame {
         tablesTables.setModel(model);
     }
     
+    
     public void setTableModelInViews(String[][] vals, String[] titles){
         TableModel model = init(vals, titles);
         tablesViews.setModel(model);
+    }
+    public void setProcInfo(String txt){
+        infoLabel.setText(txt);
     }
     
     private static TableModel init(String[][] vals, String[] titles){
@@ -307,6 +329,7 @@ public class MainPanel extends javax.swing.JFrame {
     private javax.swing.JButton create_button;
     private javax.swing.JButton create_button1;
     private javax.swing.JButton create_button2;
+    private javax.swing.JLabel infoLabel;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
