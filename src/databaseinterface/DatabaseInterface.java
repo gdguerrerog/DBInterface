@@ -9,6 +9,7 @@ import GUI.CreateDialog;
 import GUI.LogInPanel;
 import GUI.MainPanel;
 import data_access.Database;
+import data_access.Database.Funcion;
 import data_access.Database.Procedimiento;
 
 /**
@@ -39,41 +40,58 @@ public class DatabaseInterface {
     public static Procedimiento[] ADMINISTRADOR_PROC = {Database.procedure[0],Database.procedure[1],Database.procedure[2],Database.procedure[3],Database.procedure[5],Database.procedure[6],Database.procedure[7],Database.procedure[8],Database.procedure[9]};
     public static Procedimiento[] ADMINDB_PROC = {Database.procedure[0],Database.procedure[1],Database.procedure[2],Database.procedure[3],Database.procedure[4],Database.procedure[5],Database.procedure[6],Database.procedure[7],Database.procedure[8],Database.procedure[9]};
 
+    public static Funcion[] SECRETARIO_FUN = Database.funciones;
+    public static Funcion[] ADMINISTRADOR_FUN = Database.funciones;   
+    public static Funcion[] ADMINDB_FUN = Database.funciones;
+    public static Funcion[] PROVIDER_FUN = {Database.funciones[9]};
+    public static Funcion[] PUBLICISTA_FUN ={Database.funciones[9]};
+
+
 
     
 
     public static enum UserType{
         
-        ADMIN(Database.tables, Database.vistas, ADMINDB_PROC, true), 
-        ALUMNO(EMPTY, ALUMNO_VISTAS, new Procedimiento[]{}),
-        PROVIDER(EMPTY, PROVIDER_VISTAS, PROVIDER_PROC),
-        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS,new Procedimiento[]{}),
-        PUBLICISTA(EMPTY, PUBLICISTA_VISTAS,PUBLICISTA_PROC),
-        SECRETARIO(EMPTY, SECRETARIO_VISTAS,SECRETARIO_PROC),
-        CONTADOR(EMPTY, CONTADOR_VISTAS,new Procedimiento[]{}),
-        ADMINISTRADOR(EMPTY, ADMINISTRADOR_VISTAS,ADMINISTRADOR_PROC),
-        DOCENTE(EMPTY, DOCENTE_VISTAS, new Procedimiento[]{});
+        ADMIN(Database.tables, Database.vistas, ADMINDB_PROC, ADMINDB_FUN, true), 
+        ALUMNO(EMPTY, ALUMNO_VISTAS, new Procedimiento[]{},new Funcion[]{}),
+        PROVIDER(EMPTY, PROVIDER_VISTAS, PROVIDER_PROC,PROVIDER_FUN),
+        INVERSIONISTA(EMPTY, INVERSIONISTA_VISTAS,new Procedimiento[]{},new Funcion[]{}),
+        PUBLICISTA(EMPTY, PUBLICISTA_VISTAS,PUBLICISTA_PROC,PUBLICISTA_FUN),
+        SECRETARIO(EMPTY, SECRETARIO_VISTAS,SECRETARIO_PROC,SECRETARIO_FUN),
+        CONTADOR(EMPTY, CONTADOR_VISTAS,new Procedimiento[]{},new Funcion[]{}),
+        ADMINISTRADOR(EMPTY, ADMINISTRADOR_VISTAS,ADMINISTRADOR_PROC,ADMINISTRADOR_FUN),
+        DOCENTE(EMPTY, DOCENTE_VISTAS, new Procedimiento[]{},new Funcion[]{});
         
         public final String[] selectTables;
         public final String[] selectVistas;
-        public final Procedimiento[] proc;
+        public final Procedimiento[] proc;        
+        public final Funcion[] funciones;
+
         public final boolean isAdmin;
         
-        UserType(String[] selectTables, String[] vistas, Procedimiento[] proc, boolean isAdmin){
+        UserType(String[] selectTables, String[] vistas, Procedimiento[] proc,Funcion[] fun,  boolean isAdmin){
             this.selectTables = selectTables;
             this.selectVistas = vistas;
             this.proc = proc;
             this.isAdmin = isAdmin;
+            this.funciones = fun;
         }
         
-        UserType(String[] selectTables, String[] vistas, Procedimiento[] proc){
-            this(selectTables, vistas, proc, false);
+        UserType(String[] selectTables, String[] vistas, Procedimiento[] proc,Funcion[] fun){
+            this(selectTables, vistas, proc,fun, false);
         }
         
         public String[] procToString(){
             String[] result = new String[proc.length];
             for (int i = 0; i < proc.length; i++) {
                 result[i] = proc[i].nombre;
+            }
+            return result;
+        }
+        public String[] funToString(){
+            String[] result = new String[funciones.length];
+            for (int i = 0; i < funciones.length; i++) {
+                result[i] = funciones[i].nombre;
             }
             return result;
         }
@@ -142,12 +160,28 @@ public class DatabaseInterface {
         else dialog.setInfoText("Insertado");
     }
     public static void executeProcedure(Procedimiento procedure, String[] params){
+    
         mainPanel.setProcInfo("Ejecutando procedimiento ....");
-        database.executeProcedure(procedure,params);
+        String result = database.executeProcedure(procedure,params);
+        if (result!=null) mainPanel.setProcInfo("Error ejecutando Procedimiento. Msg: " + result);
+        else mainPanel.setProcInfo("Finalizado");
+        mainPanel.setProcOutput("");
     
     }
+    
     public static void executeProcedureWithReturn(Procedimiento procedure, String[] params){
-        
+        mainPanel.setProcInfo("Ejecutando procedimiento ....");
+        String[] result = database.executeProcedureWithReturn(procedure,params);
+        if (result[0]==null) mainPanel.setProcInfo("Error ejecutando Procedimiento. Msg: " + result[1]);
+        else mainPanel.setProcInfo("Finalizado");
+        mainPanel.setProcOutput(result[0]);
+    }
+    public static void executeFun(Funcion fun,String[] params){
+        mainPanel.setFunInfo("Ejecutando Funcion ....");
+        String[] result = database.executeFunc(fun,params);
+        if (result[1]==null) mainPanel.setFunInfo("Error ejecutando Funcion. Msg: " + result[1]);
+        else mainPanel.setFunInfo("Finalizado");
+        mainPanel.setFunOutput(result[0]);
     }
     
     public static void main(String[] args) {
